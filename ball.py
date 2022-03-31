@@ -20,6 +20,8 @@ class Ball(Turtle):
 
     def reset_position(self):
         self.goto(0, -250)
+        self.x_step = 10
+        self.y_step = 10
         self.going_up = True
         self.going_right = True
 

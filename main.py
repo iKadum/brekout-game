@@ -56,12 +56,17 @@ while game_is_on:
     screen.update()
     time.sleep(ball.move_speed)
 
+    # ball hits right or left wall
+    if ball.xcor() > 375 or ball.xcor() < -375:
+        ball.bounce_x()
+
+    # ball hits top wall
     if ball.ycor() > 280:
         ball.bounce_y()
 
-    if -255 < ball.ycor() < -245:
-        if ball.distance(paddle) < 65 and ball.going_up is False:  # ball hits the paddle from above
-            ball.bounce_y()
+    # ball hits paddle
+    if -255 < ball.ycor() < -245 and ball.distance(paddle) < 65 and ball.going_up is False:
+        ball.bounce_y()
 
     # ball falls down
     if ball.ycor() < -290:
@@ -69,15 +74,19 @@ while game_is_on:
 
     # ball hits brick
     for brick in bricks:
-        if ball.distance(bricks[brick]) < 50 and abs(bricks[brick].ycor() - ball.ycor()) < 35:
+        if ball.distance(bricks[brick]) < 55 and abs(bricks[brick].ycor() - ball.ycor()) < 5:  # ball hits side
+            ball.bounce_x()
+            destroy_brick(bricks[brick])
+            break
+        if ball.distance(bricks[brick]) < 40 and abs(bricks[brick].ycor() - ball.ycor()) < 35:
             ball.bounce_y()
             destroy_brick(bricks[brick])
+            break
 
+    # last brick is destroyed
     if no_of_bricks < 1:
         game_is_on = False
 
-    if ball.xcor() > 375 or ball.xcor() < -375:
-        ball.bounce_x()
 
 print("GAME OVER")
 
