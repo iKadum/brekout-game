@@ -2,9 +2,11 @@ from turtle import Screen
 from paddle import Paddle
 from ball import Ball
 from brick import Brick
+import random
 import time
 
 INITIAL_BRICK = (-353, 270)  # position of the upper left first brick
+COLORS = ["white", "red", "green", "blue", "yellow", "orange"]
 
 
 def reset():
@@ -41,8 +43,11 @@ for y in range(5):  # 5 brick rows
     x_cor, _ = INITIAL_BRICK  # reset x to first column
     y_cor -= 30  # new row 30 px down
 
+for brick in bricks:
+    bricks[brick].color(random.choice(COLORS))
+
 no_of_bricks = len(bricks)
-print(no_of_bricks)
+no_of_colors = len(COLORS)
 
 screen.listen()
 screen.onkeypress(paddle.move_left, "Left")

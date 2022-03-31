@@ -11,5 +11,4 @@ class Brick(Turtle):
         self.goto(x, y)
 
     def disappear(self):
-        self.color("black")
         self.goto(1000, 1000)
