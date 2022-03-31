@@ -8,6 +8,8 @@ class Paddle(Turtle):
         self.color("white")
         self.penup()
         self.shapesize(stretch_wid=1, stretch_len=5)
+
+    def reset_position(self):
         self.goto(0, -270)
 
     def move_left(self):
