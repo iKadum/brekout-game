@@ -4,7 +4,7 @@ from ball import Ball
 from brick import Brick
 import time
 
-INITIAL_BRICK = (-354, 270)
+INITIAL_BRICK = (-353, 270)  # position of the upper left first brick
 
 
 def reset():
@@ -12,6 +12,14 @@ def reset():
     paddle.reset_position()
     screen.update()
     time.sleep(0.5)
+
+
+def destroy_brick(bri):
+    global no_of_bricks
+    bri.disappear()
+    ball.move_speed *= 0.99  # ball moves faster
+    no_of_bricks -= 1
+    print(no_of_bricks)  # DEBUG
 
 
 screen = Screen()
@@ -23,15 +31,18 @@ screen.tracer(0)
 paddle = Paddle()
 ball = Ball()
 
-bricks = {}
-x_cor, y_cor = INITIAL_BRICK
-for y in range(5):
-    for x in range(11):
-        bricks[f"brick_{x}_{y}"] = Brick(x_cor, y_cor)
-        x_cor += 70
-    x_cor, _ = INITIAL_BRICK
-    y_cor -= 30
 
+bricks = {}  # create bricks in a dictionary
+x_cor, y_cor = INITIAL_BRICK
+for y in range(5):  # 5 brick rows
+    for x in range(11):  # 11 bricks in every row
+        bricks[f"brick_{x}_{y}"] = Brick(x_cor, y_cor)  # every Brick object has its own name - brick_x_y
+        x_cor += 70  # new brick 70 px on the right
+    x_cor, _ = INITIAL_BRICK  # reset x to first column
+    y_cor -= 30  # new row 30 px down
+
+no_of_bricks = len(bricks)
+print(no_of_bricks)
 
 screen.listen()
 screen.onkeypress(paddle.move_left, "Left")
@@ -48,22 +59,26 @@ while game_is_on:
     if ball.ycor() > 280:
         ball.bounce_y()
 
-    if ball.distance(paddle) < 45 and ball.ycor() < -245:
-        ball.move_speed *= 0.99
-        print(ball.move_speed)
-        ball.bounce_y()
-
-    for brick in bricks:
-        if ball.distance(bricks[brick]) < 60 and ball.ycor() > (bricks[brick].ycor() - 30) and bricks[brick].exist is True:
-            bricks[brick].disappear()
+    if -255 < ball.ycor() < -245:
+        if ball.distance(paddle) < 65 and ball.going_up is False:  # ball hits the paddle from above
             ball.bounce_y()
 
+    # ball falls down
     if ball.ycor() < -290:
         reset()
 
-    if ball.xcor() > 380 or ball.xcor() < -380:
+    # ball hits brick
+    for brick in bricks:
+        if ball.distance(bricks[brick]) < 50 and abs(bricks[brick].ycor() - ball.ycor()) < 35:
+            ball.bounce_y()
+            destroy_brick(bricks[brick])
+
+    if no_of_bricks < 1:
+        game_is_on = False
+
+    if ball.xcor() > 375 or ball.xcor() < -375:
         ball.bounce_x()
 
+print("GAME OVER")
 
-
-# screen.exitonclick()
+screen.exitonclick()

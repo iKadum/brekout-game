@@ -9,8 +9,7 @@ class Brick(Turtle):
         self.penup()
         self.shapesize(stretch_wid=1, stretch_len=3)
         self.goto(x, y)
-        self.exist = True
 
     def disappear(self):
         self.color("black")
-        self.exist = False
+        self.goto(1000, 1000)
