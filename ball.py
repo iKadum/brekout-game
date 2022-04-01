@@ -9,7 +9,7 @@ class Ball(Turtle):
         self.penup()
         self.x_step = 10
         self.y_step = 10
-        self.move_speed = 0.05
+        self.move_speed = 0.03
         self.going_up = True
         self.going_right = True
 
@@ -40,6 +40,3 @@ class Ball(Turtle):
             self.going_right = True
         self.x_step *= -1
         print("bounce X")  # debug
-
-
-

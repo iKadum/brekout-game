@@ -24,6 +24,7 @@ def destroy_brick(bri):
     print(no_of_bricks)  # DEBUG
 
 
+# create screen
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(width=800, height=600)
@@ -33,7 +34,9 @@ screen.tracer(0)
 paddle = Paddle()
 ball = Ball()
 
+canvas = screen.getcanvas()
 
+# create bricks
 bricks = {}  # create bricks in a dictionary
 x_cor, y_cor = INITIAL_BRICK
 for y in range(5):  # 5 brick rows
@@ -57,6 +60,11 @@ reset()
 
 game_is_on = True
 while game_is_on:
+    canvas = screen.getcanvas()
+    x = canvas.winfo_pointerx() - canvas.winfo_rootx() - 400
+
+    paddle.new_position(x)
+
     ball.move()
     screen.update()
     time.sleep(ball.move_speed)
