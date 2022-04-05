@@ -57,9 +57,10 @@ scoreboard = Scoreboard()
 bricks = create_bricks()
 no_of_bricks = len(bricks)
 
-screen.listen()
-screen.onkeypress(paddle.move_left, "Left")
-screen.onkeypress(paddle.move_right, "Right")
+# # move paddle with keyboard
+# screen.listen()
+# screen.onkeypress(paddle.move_left, "Left")
+# screen.onkeypress(paddle.move_right, "Right")
 
 reset()
 
@@ -68,9 +69,9 @@ while game_is_on:
     if scoreboard.balls < 1:
         game_is_on = False
 
+    # move paddle with mouse
     canvas = screen.getcanvas()
     x = canvas.winfo_pointerx() - canvas.winfo_rootx() - 400
-
     paddle.new_position(x)
 
     ball.move()
