@@ -1,11 +1,13 @@
 from turtle import Turtle
 
+PADDLE_COLOR = "white"
+
 
 class Paddle(Turtle):
     def __init__(self):
         super().__init__()
         self.shape("square")
-        self.color("white", "black")
+        self.color(PADDLE_COLOR)
         self.penup()
         self.shapesize(stretch_wid=1, stretch_len=5)
 

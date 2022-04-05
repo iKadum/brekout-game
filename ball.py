@@ -1,11 +1,13 @@
 from turtle import Turtle
 
+BALL_COLOR = "grey"
+
 
 class Ball(Turtle):
     def __init__(self):
         super().__init__()
         self.shape("circle")
-        self.color("grey")
+        self.color(BALL_COLOR)
         self.penup()
         self.x_step = 10
         self.y_step = 10
@@ -31,7 +33,7 @@ class Ball(Turtle):
         else:
             self.going_up = True
         self.y_step *= -1
-        print("bounce Y")  # debug
+        # print("bounce Y")  # debug
 
     def bounce_x(self):
         if self.going_right is True:
@@ -39,4 +41,4 @@ class Ball(Turtle):
         else:
             self.going_right = True
         self.x_step *= -1
-        print("bounce X")  # debug
+        # print("bounce X")  # debug
