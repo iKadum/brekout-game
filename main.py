@@ -34,12 +34,11 @@ def create_bricks():
 
 
 def destroy_brick(bri):
-    global no_of_bricks
     bri.disappear()
-    ball.move_speed *= 0.99  # ball moves faster
-    print(ball.move_speed)  # DEBUG
-    no_of_bricks -= 1
-    # print(no_of_bricks)  # DEBUG
+    scoreboard.hit_brick()
+    del bri
+    # ball.move_speed *= 0.99  # ball moves faster
+    # print(ball.move_speed)  # DEBUG
 
 
 # create screen
@@ -55,7 +54,6 @@ ball = Ball()
 scoreboard = Scoreboard()
 
 bricks = create_bricks()
-no_of_bricks = len(bricks)
 
 # # move paddle with keyboard
 # screen.listen()
@@ -68,10 +66,12 @@ game_is_on = True
 while game_is_on:
     if scoreboard.balls < 1:
         game_is_on = False
+        break
 
-    # move paddle with mouse
-    canvas = screen.getcanvas()
-    x = canvas.winfo_pointerx() - canvas.winfo_rootx() - 400
+    # # move paddle with mouse
+    # canvas = screen.getcanvas()
+    # x = canvas.winfo_pointerx() - canvas.winfo_rootx() - 400
+    x, y = ball.pos()
     paddle.new_position(x)
 
     ball.move()
@@ -87,14 +87,18 @@ while game_is_on:
         ball.bounce_y()
 
     # ball hits paddle
-    if -255 < ball.ycor() < -245 and ball.distance(paddle) < 60 and ball.going_up is False:
+    if -255 < ball.ycor() < -245 and ball.distance(paddle) < 65 and ball.going_up is False:
         ball.bounce_y()
 
-        # change ball movement angle if hit edge of paddle
-        if ball.distance(paddle) > 40:
-            ball.x_step += 0.5
-        if ball.distance(paddle) > 50:
-            ball.x_step += 0.5
+        # # change ball movement angle if hit edge of paddle
+        # if ball.distance(paddle) > 40:
+        #     ball.x_step += 1
+        # if ball.distance(paddle) > 50:
+        #     ball.x_step += 1
+        # if ball.distance(paddle) > 55:
+        #     ball.x_step += 1
+
+        # print(ball.x_step, ball.y_step)  # DEBUG
 
     # ball falls down
     if ball.ycor() < -290:
@@ -106,22 +110,27 @@ while game_is_on:
         if ball.distance(bricks[brick]) < 55 and abs(bricks[brick].ycor() - ball.ycor()) < 5:  # ball hits side
             ball.bounce_x()
             destroy_brick(bricks[brick])
-            scoreboard.hit_brick()
+            bricks.pop(brick, None)
+            # print(bricks)  # DEBUG
             break
         if ball.distance(bricks[brick]) < 40 and abs(bricks[brick].ycor() - ball.ycor()) < 35:
             ball.bounce_y()
             destroy_brick(bricks[brick])
-            scoreboard.hit_brick()
+            bricks.pop(brick, None)
+            # print(bricks)  # DEBUG
             break
 
     # print(ball.x_step)  # DEBUG
 
     # last brick is destroyed
+    no_of_bricks = len(bricks)
     if no_of_bricks < 1:
-        reset()
+        screen.update()
+        ball.move_speed *= 0.5
         scoreboard.next_level()
         bricks = create_bricks()
         no_of_bricks = len(bricks)
+        reset()
 
 
 scoreboard.game_over()
