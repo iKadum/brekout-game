@@ -3,11 +3,10 @@ from paddle import Paddle
 from ball import Ball
 from brick import Brick
 from scoreboard import Scoreboard
-import random
 import time
 
 INITIAL_BRICK = (-353, 240)  # position of the upper left first brick
-BRICK_COLORS = ["white", "red", "green", "blue", "yellow", "orange"]
+
 
 
 def reset():
@@ -27,10 +26,7 @@ def create_bricks():
         x_cor, _ = INITIAL_BRICK  # reset x to first column
         y_cor -= 30  # new row 30 px down
 
-    for brick_ in bricks_:
-        bricks_[brick_].color(random.choice(BRICK_COLORS))
-
-    return bricks_
+    return bricks_, y_cor
 
 
 def destroy_brick(bri):
@@ -53,7 +49,7 @@ paddle = Paddle()
 ball = Ball()
 scoreboard = Scoreboard()
 
-bricks = create_bricks()
+bricks, lower_brick = create_bricks()  # function returns bricks dictionary and the y of the last brick
 
 # # move paddle with keyboard
 # screen.listen()
@@ -106,19 +102,21 @@ while game_is_on:
         reset()
 
     # ball hits brick
-    for brick in bricks:
-        if ball.distance(bricks[brick]) < 55 and abs(bricks[brick].ycor() - ball.ycor()) < 5:  # ball hits side
-            ball.bounce_x()
-            destroy_brick(bricks[brick])
-            bricks.pop(brick, None)
-            # print(bricks)  # DEBUG
-            break
-        if ball.distance(bricks[brick]) < 40 and abs(bricks[brick].ycor() - ball.ycor()) < 35:
-            ball.bounce_y()
-            destroy_brick(bricks[brick])
-            bricks.pop(brick, None)
-            # print(bricks)  # DEBUG
-            break
+    if ball.ycor() > lower_brick:  # don't do for loop unnecessary
+        # print(ball.ycor(), lower_brick)  # DEBUG
+        for brick in bricks:
+            if ball.distance(bricks[brick]) < 55 and abs(bricks[brick].ycor() - ball.ycor()) < 5:  # ball hits side
+                ball.bounce_x()
+                destroy_brick(bricks[brick])
+                bricks.pop(brick, None)
+                # print(bricks)  # DEBUG
+                break
+            if ball.distance(bricks[brick]) < 40 and abs(bricks[brick].ycor() - ball.ycor()) < 35:
+                ball.bounce_y()
+                destroy_brick(bricks[brick])
+                bricks.pop(brick, None)
+                # print(bricks)  # DEBUG
+                break
 
     # print(ball.x_step)  # DEBUG
 
@@ -128,7 +126,7 @@ while game_is_on:
         screen.update()
         ball.move_speed *= 0.5
         scoreboard.next_level()
-        bricks = create_bricks()
+        bricks, lower_brick = create_bricks()
         no_of_bricks = len(bricks)
         reset()
 
